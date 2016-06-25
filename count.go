@@ -17,8 +17,9 @@ var (
 )
 
 var (
-	BaiduCountRegexp = regexp.MustCompile("百度为您找到相关结果约([0-9,]+?)个")
-	SogouCountRegexp = regexp.MustCompile("<!--resultbarnum:([0-9,]+?)-->")
+	BaiduCountRegexp    = regexp.MustCompile("百度为您找到相关结果约([0-9,]+?)个")
+	SogouCountRegexp    = regexp.MustCompile("<!--resultbarnum:([0-9,]+?)-->")
+	SoDotComCountRegexp = regexp.MustCompile("找到相关结果约([0-9,]+?)个")
 
 	GetCountRequestUserAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36`
 )
@@ -63,5 +64,12 @@ func GetBaiduCount(query string) (count int, err error) {
 func GetSogouCount(query string) (count int, err error) {
 	url := fmt.Sprintf(`https://www.sogou.com/web?ie=utf8&query="%s"`, query)
 	count, err = request(url, SogouCountRegexp)
+	return
+}
+
+// Get total search result count from so.com.
+func GetSoDotComCount(query string) (count int, err error) {
+	url := fmt.Sprintf(`https://www.so.com/s?q="%s"`, query)
+	count, err = request(url, SoDotComCountRegexp)
 	return
 }
